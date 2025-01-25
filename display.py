@@ -59,6 +59,8 @@ def solve_placement(file_name):
     city_polygon_1 = load_city_boundary(file_name)
     candidate_locations_1 = generate_grid(city_polygon_1, 2)
     points_to_cover_1 = generate_grid(city_polygon_1, 1)
+    for pt in city_polygon_1.exterior.coords:
+            points_to_cover_1.append(Point(pt[0], pt[1]))
 
     # https://stackoverflow.com/questions/1253499/simple-calculations-for-working-with-lat-lon-and-km-distance
     # 1 deg = math.cos(math.radians(loc[0].y)) * 111.320
@@ -87,6 +89,9 @@ def solve_all():
     city_polygon_1 = load_city_boundary(csv_map1)
     candidate_locations_1 = generate_grid(city_polygon_1, 2)
     points_to_cover_1 = generate_grid(city_polygon_1, 1)
+    for pt in city_polygon_1.exterior.coords:
+            points_to_cover_1.append(Point(pt[0], pt[1]))
+
 
     # https://stackoverflow.com/questions/1253499/simple-calculations-for-working-with-lat-lon-and-km-distance
     # 1 deg = math.cos(math.radians(loc[0].y)) * 111.320
@@ -100,6 +105,9 @@ def solve_all():
     difference_polygon = city_polygon_2.difference(city_polygon_1)
     candidate_locations_2 = generate_grid(difference_polygon, 2)
     points_to_cover_2 = generate_grid(difference_polygon, 1)
+    for pt in points_to_cover_2.exterior.coords:
+            points_to_cover_2.append(Point(pt[0], pt[1]))
+
     points_to_cover_2 = [point for point in points_to_cover_2 if all([point.distance(fire_hall) > rad for fire_hall in fire_hall_locations_1])]
     fixed_halls = [candidate_locations_1.index(fh) for fh in fire_hall_locations_1]
 
@@ -110,6 +118,8 @@ def solve_all():
     difference_polygon = city_polygon_3.difference(city_polygon_2)
     candidate_locations_3 = generate_grid(difference_polygon, 2)
     points_to_cover_3 = generate_grid(difference_polygon, 1)
+    for pt in points_to_cover_3.exterior.coords:
+            points_to_cover_3.append(Point(pt[0], pt[1]))
     points_to_cover_3 = [point for point in points_to_cover_3 if all([point.distance(fire_hall) > rad for fire_hall in fire_hall_locations_2])]
     fixed_halls = fixed_halls + [candidate_locations_2.index(fh) for fh in fire_hall_locations_2]
 
@@ -137,7 +147,7 @@ def solve_all():
 buttons = tk.Frame(root)
 buttons.pack()
 
-make_circles_button = tk.Button(buttons, text="Start", command=solve_all)
+make_circles_button = tk.Button(buttons, text="All Years", command=solve_all)
 make_circles_button.pack(side=tk.RIGHT, padx=20, pady=20)
 
 make_circles_button = tk.Button(buttons, text="1963", command=solve_placement_1963)
