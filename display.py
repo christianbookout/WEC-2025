@@ -4,6 +4,7 @@ from tkinter import filedialog
 from matplotlib.patches import Circle
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from shapely import Point
 from data.parser import read_from_file
 from solver.solve import load_city_boundary, generate_grid, solve_fire_hall_placement
 
@@ -38,8 +39,9 @@ def load_data():
 
 
 def draw_circle(x, y, radius):
-    circle = Circle((x, y), radius, color='red', fill=False, linewidth=2)
-    
+    # circle = Circle((x, y), radius, color='red', fill=, linewidth=2)
+    # fill with opaque red
+    circle = Circle((x, y), radius, color='red', alpha=0.2, linewidth=2)
     ax.add_patch(circle)
     ax.figure.canvas.draw()
 
