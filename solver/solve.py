@@ -38,7 +38,7 @@ def solve_fire_hall_placement(candidate_locations, points_to_cover, coverage_rad
     for j in range(len(points_to_cover)):
         problem += lpSum(x[i] for i in range(len(candidate_locations)) if j in coverage[i]) >= 1
     
-    problem.solve(PULP_CBC_CMD(threads=8, cuts='on', strong=3, presolve='on', msg=True))
+    problem.solve(PULP_CBC_CMD(threads=1, cuts='on', strong=5, presolve='on', msg=True))
 
     return [candidate_locations[i] for i in range(len(candidate_locations)) if x[i].value() == 1]
 
@@ -47,8 +47,8 @@ if __name__ == "__main__":
     
     city_polygon = load_city_boundary(csv_file)
     
-    candidate_locations = generate_grid(city_polygon, 2)
-    points_to_cover = generate_grid(city_polygon, 1)
+    candidate_locations = generate_grid(city_polygon, 10)
+    points_to_cover = generate_grid(city_polygon, 10)
     
     fire_hall_locations = solve_fire_hall_placement(candidate_locations, points_to_cover, coverage_radius_km=2.5)
     
