@@ -54,6 +54,7 @@ def solve_placement_2005():
 def solve_placement_2011():
     solve_placement("data/coordinates2011.csv")
 
+# Plotting coordinates (ax.plot) was taken from ChatGPT
 def solve_placement(file_name):
     print("Solving placement")
     city_polygon_1 = load_city_boundary(file_name)
@@ -83,6 +84,7 @@ def solve_placement(file_name):
     canvas.draw()
     canvas.get_tk_widget().pack()
 
+# The parts of this that were taken from ChatGPT are the ax.plot parts.
 def solve_all():
     print("Solving placement")
     csv_map1 = "data/coordinates1963.csv"
@@ -147,6 +149,7 @@ def solve_all():
 buttons = tk.Frame(root)
 buttons.pack()
 
+# How to make these buttons was taken from ChatGPT
 make_circles_button = tk.Button(buttons, text="All Years", command=solve_all)
 make_circles_button.pack(side=tk.RIGHT, padx=20, pady=20)
 

@@ -9,6 +9,7 @@ def load_city_boundary(file):
     coordinates = list(zip(df['Longitude'], df['Latitude']))
     return Polygon(coordinates)
 
+# Grid generation taken from ChatGPT
 def generate_grid(city, spacing_km):
     grid_spacing = spacing_km / 111.0
     min_x, min_y, max_x, max_y = city.bounds
@@ -20,6 +21,10 @@ def generate_grid(city, spacing_km):
     all_points = np.c_[grid_x.ravel(), grid_y.ravel()]
     return [Point(x, y) for x, y in all_points if city.contains(Point(x, y))]
 
+# We learned how to do ILP from ChatGPT
+# From what we learned, we implemented the following code.
+# Much of the implementation of how to create LP variables and constraints
+# was learned from ChatGPT since none of us were very familiar with PuLP and some had not done LP before.
 def solve_fire_hall_placement(candidate_locations, points_to_cover, coverage_radius, fixed_halls=None, optimize_spacing=False):
     coverage = {}
 
