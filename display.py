@@ -8,6 +8,7 @@ from data.parser import read_from_file
 from solver.solve import load_city_boundary, generate_grid, solve_fire_hall_placement
 
 
+
 # Base layout taken from this link:
 # https://www.geeksforgeeks.org/how-to-embed-matplotlib-charts-in-tkinter-gui/
 
@@ -31,48 +32,56 @@ def load_data():
         
         ax.clear()
         ax.plot(x, y, 'b')
-        # draw_circle(x[0], y[0])
         
         canvas.draw()
         canvas.get_tk_widget().pack()
 
 
-def draw_circle(x, y, radius_km=2.5):
-    # visually estimate the radius of the circle based on lat long coordinates
-    # very much an estimate but it works since it's just visual I guess
-    # https://stackoverflow.com/questions/1253499/simple-calculations-for-working-with-lat-lon-and-km-distance
-    radius_lat = radius_km / 110.574
-    radius_lon = radius_km / (111.320 * math.cos(math.radians(y)))
-    circle = Circle((x, y), max(radius_lat, radius_lon), color='red', fill=False, linewidth=2)
+def draw_circle(x, y, radius):
+    circle = Circle((x, y), radius, color='red', fill=False, linewidth=2)
     
     ax.add_patch(circle)
     ax.figure.canvas.draw()
 
 
 def solve_placement():
-        global file_path
-        if file_path:
-            print("Solving placement")
+    global file_path
+    if file_path:
+        print("Solving placement")
 
-            city_polygon = load_city_boundary(file_path)
+        city_polygon = load_city_boundary(file_path)
 
-            candidate_locations = generate_grid(city_polygon, 1)
-            points_to_cover = generate_grid(city_polygon, 0.4)
+        candidate_locations = generate_grid(city_polygon, 2)
 
-            fire_hall_locations = solve_fire_hall_placement(candidate_locations, points_to_cover, coverage_radius_km=5)
+        # # map candidate locations
+        # for loc in candidate_locations:
+        #     ax.plot(loc.x, loc.y, 'bo')
 
-            # Clear the plot and redraw
-            ax.clear()
-            ax.plot(*zip(*city_polygon.exterior.coords), 'b-', label="City Boundary")  # Plot city boundary
+        points_to_cover = generate_grid(city_polygon, 1)
 
-            for loc in fire_hall_locations:
-                print(f"Fire Hall Location: {loc.x}, {loc.y}")
-                ax.plot(loc.x, loc.y, 'ro')  # Plot fire hall location as red dots
-                draw_circle(loc.x, loc.y)   # Draw coverage circle around the fire hall
+        
+        for pt in points_to_cover:
+            ax.plot(pt.x, pt.y, 'go')
 
-            ax.legend()
-            canvas.draw()
-            canvas.get_tk_widget().pack()
+        # https://stackoverflow.com/questions/1253499/simple-calculations-for-working-with-lat-lon-and-km-distance
+        # 1 deg = math.cos(math.radians(loc[0].y)) * 111.320
+        # convert 2.5 km to degrees using that formula
+        rad = 2.5 / (111.320 * math.cos(math.radians(candidate_locations[0].y)))
+        print("radius is", rad)
+
+        fire_hall_locations = solve_fire_hall_placement(candidate_locations, points_to_cover, rad)
+
+        ax.clear()
+        ax.plot(*zip(*city_polygon.exterior.coords), 'b-', label="City Boundary")
+
+        for loc in fire_hall_locations:
+            print(f"Fire Hall Location: {loc.x}, {loc.y}")
+            ax.plot(loc.x, loc.y, 'ro')
+            draw_circle(loc.x, loc.y, rad)
+
+        ax.legend()
+        canvas.draw()
+        canvas.get_tk_widget().pack()
             
 
 buttons = tk.Frame(root)
