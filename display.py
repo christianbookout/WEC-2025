@@ -22,9 +22,12 @@ def load_data():
         
         ax.clear()
         ax.plot(x, y, 'b')
-        ax.set_aspect('equal')
+        # ax.set_aspect('equal')
         canvas.draw()
         canvas.get_tk_widget().pack()
+
+def draw_circle():
+    pass
 
 buttons = tk.Frame(root)
 buttons.pack()
