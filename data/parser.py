@@ -16,8 +16,7 @@ def read_from_file(file_path):
         next(reader)
 
         for row in reader:
-            # https://math.stackexchange.com/questions/4503690/how-much-distance-is-covered-by-each-unit-of-longitude-and-latitude#:~:text=According%20to%20this%20question%20here,111.320*cos(latitude)%20km
-            x = numpy.append(x, math.cos(math.radians(float(row[0]))) * 111.320)
-            y = numpy.append(y, float(row[1]) * 110.574)
+            x = numpy.append(x, float(row[0]))
+            y = numpy.append(y, float(row[1]))
     return x, y
 

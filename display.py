@@ -1,5 +1,7 @@
+import math
 import tkinter as tk
 from tkinter import filedialog
+from matplotlib.patches import Circle
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from data.parser import read_from_file
@@ -22,12 +24,21 @@ def load_data():
         
         ax.clear()
         ax.plot(x, y, 'b')
-        # ax.set_aspect('equal')
+        draw_circle(x[0], y[0])
+        
         canvas.draw()
         canvas.get_tk_widget().pack()
 
-def draw_circle():
-    pass
+def draw_circle(x, y, radius_km=2.5):
+    # visually estimate the radius of the circle based on lat long coordinates
+    # very much an estimate but it works since it's just visual I guess
+    # https://stackoverflow.com/questions/1253499/simple-calculations-for-working-with-lat-lon-and-km-distance
+    radius_lat = radius_km / 110.574
+    radius_lon = radius_km / (111.320 * math.cos(math.radians(y)))
+    circle = Circle((x, y), max(radius_lat, radius_lon), color='red', fill=False, linewidth=2)
+    
+    ax.add_patch(circle)
+    ax.figure.canvas.draw()
 
 buttons = tk.Frame(root)
 buttons.pack()
